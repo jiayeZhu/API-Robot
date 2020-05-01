@@ -1,0 +1,8 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const {{SCHEMA_NAME}}Schema = new Schema({
+  {{PROPERTY_ENDPOINT}}
+},{timestamps:true})
+
+module.exports = mongoose.model('{{SCHEMA_NAME}}',{{SCHEMA_NAME}}Schema)
