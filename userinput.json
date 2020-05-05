@@ -1,7 +1,14 @@
 {
   "ProjectName":"TestProject",
   "ProjectDB":"MongoDB",
-  "DBurl":"mongodb://127.0.0.1:27017/myDB",
+  "DB":{
+    "host":"192.168.1.170",
+    "port":32768,
+    "dbName":"myDB"
+  },
+  "Resource":{
+    "LocationBase":"http://192.168.1.170:3000/api"
+  },
   "Entities":[
     {
       "name":"user",
@@ -17,26 +24,6 @@
         {
           "name":"uuid",
           "type":"String"
-        }
-      ],
-      "index":["_id"]
-    },
-    {
-      "name":"attack",
-      "properties":[
-        {
-          "name":"timestamp",
-          "type":"Date"
-        },
-        {
-          "name":"place",
-          "type":"Enum_String",
-          "enum":["indoor","outdoor"]
-        },
-        {
-          "name":"userId",
-          "type":"Ref_ObjectId",
-          "ref":"user._id"
         }
       ],
       "index":["_id"]

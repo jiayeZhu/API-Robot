@@ -1,0 +1,24 @@
+{
+  "name": "api-robot",
+  "version": "1.0.0",
+  "description": "Description: A tool to generate common used CRUD api service and related axios request code",
+  "main": "inputParser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiayeZhu/API-Robot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jiayeZhu/API-Robot/issues"
+  },
+  "homepage": "https://github.com/jiayeZhu/API-Robot#readme",
+  "dependencies": {
+    "mongoose": "^5.9.12",
+    "sequelize": "^5.21.7",
+    "unzipper": "^0.10.11"
+  }
+}
