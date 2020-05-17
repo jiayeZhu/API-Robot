@@ -6,15 +6,46 @@ const typeMapper = {
   'String': 'mongoose.Schema.Types.String',
   'ObjectId': 'mongoose.Schema.Types.ObjectId',
   'Boolean': 'mongoose.Schema.Types.Boolean',
-  'Number': 'mongoose.Schema.Types.Number'
+  'Number': 'mongoose.Schema.Types.Number',
+  'Decimal128': 'mongoose.Schema.Types.Decimal128',
+  'ObjectId': 'mongoose.Schema.Types.ObjectId',
+  'Buffer': 'mongoose.Schema.Types.Buffer',
 }
-const handleType = function (type) {
-  if (!type.includes('_')) return typeMapper[type]
-  else {
-    let [prefix, _type_] = type.split('_')
-    console.log(prefix, _type_)
-    return '"======"'
+const upFirstLetter = (str) => str.replace(/^\S/, s => s.toUpperCase())
+const typeHandler = (type) => {
+  // check if it's an array
+  if(Array.isArray(type)){
+    // type is array of object
+    return {isArray:true,type:typeMapper[type[0]]}
+  }else{
+    // type is not an array
+    return {isArray:false,type:typeMapper[type]}
   }
+}
+
+const handleOption = (option) => {
+  //must have "type"
+  if(!option.type) throw Error('Entity property option should have type')
+  // let rtnObj = {}
+  //handle 'type'
+  let {isArray,type} = typeHandler(option.type)
+  let rtn
+  if (isArray){
+    rtn = [{type}]
+    //check ref
+    if (option.ref){
+      rtn[0].ref = upFirstLetter(option.ref)
+    }
+  }else{
+    rtn = {type}
+    if (option.ref){
+      rtn.ref = upFirstLetter(option.ref)
+    }
+  }
+  let reg = /"type":(".*?")/g
+  return JSON.stringify(rtn).replace(reg,function(){
+    return `"type":${arguments[1].split('"')[1]}`
+  })
 }
 
 //readin file as received user input
@@ -43,13 +74,14 @@ async function main() {
   const modelNames = []
 
   userInput.Entities.forEach(e => {
-    let schemaName = e['name'].replace(/^\S/, s => s.toUpperCase()) // change first letter to uppercase
+    let schemaName = upFirstLetter(e['name']) // change first letter to uppercase
     modelNames.push(schemaName)
 
     //generate model file
     let modelFileContent = modelTemp.replace(/{{SCHEMA_NAME}}/gi, schemaName).replace(/\r\n/gi, '\n')
     e['properties'].forEach(E => {
-      modelFileContent = modelFileContent.replace(/{{PROPERTY_ENDPOINT}}/, `${E['name']}:${handleType(E['type'])},\n  {{PROPERTY_ENDPOINT}}`)
+      // modelFileContent = modelFileContent.replace(/{{PROPERTY_ENDPOINT}}/, `${E['name']}:${handleType(E['option']['type'])},\n  {{PROPERTY_ENDPOINT}}`)
+      modelFileContent = modelFileContent.replace(/{{PROPERTY_ENDPOINT}}/, `${E['name']}:${handleOption(E['option'])},\n  {{PROPERTY_ENDPOINT}}`)
     })
     modelFileContent = modelFileContent.replace(/,\n  {{PROPERTY_ENDPOINT}}/, '')
     fs.writeFileSync(`${userInput.ProjectName}/models/${schemaName}Model.js`, modelFileContent, { encoding: 'utf8' })

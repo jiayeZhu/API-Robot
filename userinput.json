@@ -2,12 +2,12 @@
   "ProjectName":"TestProject",
   "ProjectDB":"MongoDB",
   "DB":{
-    "host":"192.168.1.170",
+    "host":"192.168.30.130",
     "port":32768,
     "dbName":"myDB"
   },
   "Resource":{
-    "LocationBase":"http://192.168.1.170:3000/api"
+    "LocationBase":"http://192.168.30.130:3000/api"
   },
   "Entities":[
     {
@@ -15,18 +15,48 @@
       "properties":[
         {
           "name":"username",
-          "type":"String"
+          "option":{
+            "type":"String"
+          }
         },
         {
           "name":"password",
-          "type":"String"
+          "option":{
+            "type":"String"
+          }
         },
         {
           "name":"uuid",
-          "type":"String"
+          "option":{
+            "type":"String"
+          }
         }
       ],
       "index":["_id"]
+    },
+    {
+      "name":"record",
+      "properties":[
+        {
+          "name":"time",
+          "option":{
+            "type":"Date"
+          }
+        },
+        {
+          "name":"user",
+          "option":{
+            "type":"ObjectId",
+            "ref":"user"
+          }
+        },
+        {
+          "name":"tags_arrayTestItem",
+          "option":{
+            "type":["String"]
+          }
+        }
+      ]
     }
   ]
 }
